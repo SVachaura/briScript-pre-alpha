@@ -1,384 +1,431 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>NoomiModClone</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouChat</title>
+
 <style>
+* {
+  box-sizing: border-box;
+}
+
 :root {
-  --bg:#080d18; --panel:#101a2b; --panel2:#17243a;
-  --line:#2b3e5d; --blue:#4388ff; --cyan:#58e5ed;
-  --text:#f2f6ff; --muted:#91a4c2;
+  --blue: #3478f6;
+  --blue2: #6ba5ff;
+  --bg: #f3f7ff;
+  --text: #192943;
+  --muted: #8492a9;
 }
-*{box-sizing:border-box}
+
 body {
-  margin:0;background:transparent;color:var(--text);
-  font:14px Arial,sans-serif;overflow:hidden;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 15% 15%, #dceaff, transparent 35%),
+    radial-gradient(circle at 90% 85%, #d7e7ff, transparent 35%),
+    var(--bg);
 }
-button,input{font:inherit}
-button {
-  color:var(--text);background:var(--panel2);
-  border:1px solid var(--line);border-radius:9px;
-  padding:10px;cursor:pointer;font-weight:bold;
+
+.app {
+  width: 100%;
+  max-width: 410px;
+  animation: appear .9s ease both;
 }
-button:active{transform:scale(.98)}
-.primary,.active{background:var(--blue);border-color:#6ba2ff}
-#launcher {
-  position:fixed;bottom:12px;left:12px;z-index:10;
-  border-radius:24px;padding:12px 17px;
-  background:linear-gradient(135deg,#438dff,#6558f5);
-  box-shadow:0 5px 20px #0008;
+
+.logo {
+  text-align: center;
+  margin-bottom: 28px;
+  animation: float 4s ease-in-out infinite;
 }
-#menu {
-  position:fixed;inset:3.5vh 3vw;
-  display:flex;flex-direction:column;
-  background:rgba(8,14,26,.97);
-  border:1px solid #344968;border-radius:15px;
-  overflow:hidden;box-shadow:0 10px 40px #0009;
+
+.logo-icon {
+  width: 70px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 12px;
+  border-radius: 25px;
+  color: white;
+  font-size: 34px;
+  background: linear-gradient(135deg, #4c91ff, #2461e9);
+  box-shadow: 0 12px 30px #3478f640;
 }
-#menu.closed{display:none}
-header {
-  height:48px;min-height:48px;padding:0 14px;
-  display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid var(--line);
+
+.logo h1 {
+  margin: 0;
+  font-size: 35px;
+  letter-spacing: -1.5px;
 }
-.logo{font-size:19px;font-weight:900}
-.logo span{color:var(--cyan)}
-.header-right{display:flex;align-items:center;gap:10px}
-.badge{font-size:10px;color:var(--cyan);border:1px solid #315779;padding:6px 9px;border-radius:20px}
-#close{font-size:20px;padding:4px 10px}
-.layout{display:flex;flex:1;min-height:0}
-nav{
-  width:155px;min-width:125px;padding:10px;
-  display:flex;flex-direction:column;gap:7px;
-  border-right:1px solid var(--line);background:#0b1423;
+
+.logo h1 span {
+  color: var(--blue);
 }
-.navbtn{text-align:left;display:flex;gap:8px;align-items:center}
-.navbtn.active{background:#285bc0}
-.nav-bottom{margin-top:auto}
-main{flex:1;min-width:0;overflow:auto;padding:14px}
-.page{display:none}
-.page.show{display:block}
-h2{font-size:18px;margin:0 0 12px}
-h3{font-size:15px;margin:0 0 8px}
-.muted{font-size:12px;color:var(--muted);line-height:1.45}
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px;min-width:0}
-.stat{font-size:26px;font-weight:900;color:var(--cyan);margin:8px 0}
-.row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0}
-input{width:100%;min-width:0;padding:10px;background:#080f1c;color:white;border:1px solid var(--line);border-radius:8px;margin:6px 0 10px}
-label{font-size:12px;color:#bac8df}
-.btnrow{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
-.btnrow button{flex:1}
-.skin-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.skin{text-align:left;min-height:58px}
-.skin small{display:block;color:var(--muted);margin-top:5px;font-size:11px}
-.notice{margin-top:10px;padding:9px;background:#10342e;border:1px solid #205c50;color:#9af3cc;border-radius:8px;font-size:12px}
-.code{font-size:24px;font-weight:900;letter-spacing:2px;text-align:center;color:var(--cyan);padding:10px;background:#080f1c;border:1px dashed #416c8a;border-radius:9px;margin:8px 0}
-.hide{display:none!important}
-.footer{padding:7px;text-align:center;font-size:11px;color:var(--muted)}
-.footer b{color:var(--cyan)}
-@media(max-height:360px){
-  header{height:38px;min-height:38px}
-  nav{width:130px;padding:6px;gap:4px}
-  nav button{padding:7px;font-size:11px}
-  main{padding:9px}
-  .card{padding:9px}
-  .stat{font-size:21px;margin:4px 0}
-  .footer{display:none}
+
+.logo p {
+  color: var(--muted);
+  margin-top: 9px;
 }
-@media(max-width:560px){
-  nav{width:112px;min-width:112px;padding:6px}
-  .navbtn{font-size:11px;padding:9px 5px;gap:4px}
-  main{padding:9px}
-  .cards{grid-template-columns:1fr}
-  .skin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .badge{display:none}
+
+.card {
+  padding: 25px;
+  border: 1px solid #ffffff;
+  border-radius: 27px;
+  background: #ffffffd9;
+  box-shadow: 0 20px 60px #315b9510;
+  backdrop-filter: blur(20px);
+}
+
+.tabs {
+  display: flex;
+  gap: 5px;
+  padding: 5px;
+  border-radius: 15px;
+  background: #edf2fb;
+  margin-bottom: 25px;
+}
+
+.tabs button {
+  flex: 1;
+  border: 0;
+  border-radius: 11px;
+  padding: 12px;
+  background: transparent;
+  color: #71819a;
+  cursor: pointer;
+  transition: .4s ease;
+}
+
+.tabs button.active {
+  color: white;
+  background: var(--blue);
+  box-shadow: 0 5px 15px #3478f633;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-size: 25px;
+}
+
+.subtitle {
+  margin: 0 0 23px;
+  color: var(--muted);
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.field {
+  margin-bottom: 17px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 9px;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+input {
+  width: 100%;
+  border: 1px solid #e1e8f3;
+  border-radius: 14px;
+  background: #f8faff;
+  padding: 15px;
+  outline: none;
+  font-size: 15px;
+  color: var(--text);
+  transition: border .3s, box-shadow .3s, background .3s;
+}
+
+input:focus {
+  border-color: var(--blue);
+  background: white;
+  box-shadow: 0 0 0 4px #3478f615;
+}
+
+.hint {
+  margin-top: 7px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.hint.good {
+  color: #159568;
+}
+
+.hint.bad {
+  color: #d94c60;
+}
+
+.primary {
+  width: 100%;
+  margin-top: 8px;
+  padding: 16px;
+  border: none;
+  border-radius: 15px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  background: linear-gradient(110deg, #438bff, #2867ed);
+  box-shadow: 0 9px 22px #3478f630;
+  cursor: pointer;
+  transition: transform .3s, box-shadow .3s;
+}
+
+.primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 13px 28px #3478f640;
+}
+
+.primary:active {
+  transform: scale(.97);
+}
+
+.footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 20px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px;
+  margin: 4px 0 20px;
+  border: 1px solid #e4ecf8;
+  border-radius: 17px;
+  background: white;
+  transition: .4s;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 17px;
+  color: white;
+  font-size: 22px;
+  background: linear-gradient(135deg, #77b1ff, #3478f6);
+}
+
+.profile-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.profile-user {
+  font-size: 13px;
+  color: var(--blue);
+}
+
+.hidden {
+  display: none;
+}
+
+.notice {
+  display: none;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #e8f3ff;
+  color: #2459a6;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
 }
 </style>
 </head>
+
 <body>
+<main class="app">
 
-<button id="launcher" onclick="toggleMenu()">MOD MENU</button>
-
-<div id="menu">
-  <header>
-    <div class="logo">Noomi<span>Mod</span>Clone</div>
-    <div class="header-right">
-      <div class="badge">LANDSCAPE UI</div>
-      <button id="close" onclick="toggleMenu()">×</button>
-    </div>
+  <header class="logo">
+    <div class="logo-icon">✉</div>
+    <h1>You<span>Chat</span></h1>
+    <p>Твоё общение начинается здесь</p>
   </header>
 
-  <div class="layout">
-    <nav>
-      <button class="navbtn active" data-page="home">⌂ Главная</button>
-      <button class="navbtn" data-page="skins">✦ Скины</button>
-      <button class="navbtn" data-page="count">🎯 Перехваты</button>
-      <button class="navbtn" data-page="multi">◎ Комната</button>
-      <button class="navbtn" data-page="settings">⚙ Настройки</button>
-      <button class="navbtn nav-bottom" onclick="toggleMenu()">↙ Свернуть</button>
-    </nav>
+  <section class="card">
 
-    <main>
-      <section class="page show" id="page-home">
-        <h2>Игровая панель</h2>
-        <div class="cards">
-          <div class="card">
-            <div class="muted">Выбранный скин</div>
-            <div class="stat" id="heroSkin">Классический</div>
-            <button onclick="go('skins')">Выбрать скин →</button>
-          </div>
-          <div class="card">
-            <div class="muted">Количество перехватов</div>
-            <div class="stat" id="heroCount">10</div>
-            <button onclick="go('count')">Изменить количество →</button>
-          </div>
-          <div class="card">
-            <h3>Игра с другом</h3>
-            <div class="muted">Комнаты и приглашения</div>
-            <button onclick="go('multi')">Открыть комнаты →</button>
-          </div>
-          <div class="card">
-            <h3>Состояние меню</h3>
-            <div class="muted">Интерактивная демонстрация интерфейса</div>
-            <div class="notice">Меню открыто</div>
-          </div>
-        </div>
-      </section>
+    <div class="tabs">
+      <button id="registerTab" class="active"
+        onclick="setMode('register')">Регистрация</button>
+      <button id="loginTab"
+        onclick="setMode('login')">Вход</button>
+    </div>
 
-      <section class="page" id="page-skins">
-        <h2>✦ Скины</h2>
-        <div class="muted">Выбери скин для демонстрации.</div>
-        <div class="skin-grid" id="skinGrid" style="margin-top:12px"></div>
-        <div id="skinStatus" class="notice hide"></div>
-      </section>
+    <form id="authForm">
+      <h2 id="heading">Создать аккаунт</h2>
+      <p class="subtitle" id="subtitle">
+        Заполни данные и присоединяйся к YouChat.
+      </p>
 
-      <section class="page" id="page-count">
-        <h2>🎯 Перехваты</h2>
-        <div class="cards">
-          <div class="card">
-            <div class="muted">Текущее значение</div>
-            <div class="stat" id="countView">10</div>
-          </div>
-          <div class="card">
-            <div class="muted">Сохранённое исходное</div>
-            <div class="stat" id="originalView">10</div>
-          </div>
-        </div>
-        <div class="card" style="margin-top:10px">
-          <label for="countInput">Установить количество</label>
-          <input id="countInput" type="number" min="0" max="999999" value="10">
-          <div class="btnrow">
-            <button class="primary" onclick="applyCount()">✓ Применить</button>
-            <button onclick="restoreCount()">↶ Вернуть исходное</button>
-            <button onclick="saveOriginal()">Сохранить текущее как исходное</button>
-          </div>
-          <div id="countStatus" class="muted" style="margin-top:10px"></div>
-        </div>
-      </section>
+      <div class="field" id="nameField">
+        <label for="displayName">Имя пользователя</label>
+        <input id="displayName" maxlength="40"
+          placeholder="Например, Алекс" autocomplete="name">
+      </div>
 
-      <section class="page" id="page-multi">
-        <h2>◎ Комната с другом</h2>
-        <div class="cards">
-          <div class="card">
-            <label for="roomName">Название комнаты</label>
-            <input id="roomName" maxlength="24" value="скебоб">
-            <label for="roomPass">Пароль (необязательно)</label>
-            <input id="roomPass" maxlength="32" placeholder="Пароль комнаты">
-            <button class="primary" style="width:100%" onclick="createRoom()">＋ Создать комнату</button>
-          </div>
-          <div class="card hide" id="roomResult">
-            <div class="muted">Название комнаты</div>
-            <h3 id="madeName">скебоб</h3>
-            <div class="muted">Код комнаты</div>
-            <div class="code" id="roomCode">NOO-0000</div>
-            <div class="btnrow">
-              <button onclick="copyCode()">Копировать код</button>
-              <button onclick="invite()">Пригласить</button>
-            </div>
-            <div id="roomStatus" class="muted" style="margin-top:9px"></div>
-            <div class="row"><span>Игроки</span><b id="players">1 / 2</b></div>
-            <button id="joinBtn" style="width:100%" onclick="addPlayer()">Добавить игрока (демо)</button>
-            <button id="startBtn" class="primary hide" style="width:100%;margin-top:8px" onclick="startGame()">▶ Начать (демо)</button>
-          </div>
+      <div class="field" id="usernameField">
+        <label for="username">Username</label>
+        <div class="input-wrap">
+          <input id="username" maxlength="20"
+            placeholder="alex_67"
+            autocomplete="username"
+            autocapitalize="none" spellcheck="false">
         </div>
-        <div class="notice">Комнаты пока демонстрационные и не соединяют реальные устройства.</div>
-      </section>
+        <div class="hint" id="usernameHint">
+          Твой уникальный никнейм: @username
+        </div>
+      </div>
 
-      <section class="page" id="page-settings">
-        <h2>⚙ Настройки</h2>
-        <div class="card">
-          <div class="row"><div><b>Цвет меню</b><div class="muted">Синяя тема</div></div><button onclick="changeTheme()">Сменить тему</button></div>
-          <div class="row"><div><b>Сбросить демо</b><div class="muted">Вернуть значения по умолчанию</div></div><button onclick="resetDemo()">Сбросить</button></div>
-          <div class="muted">Версия интерфейса: 0.2 Demo</div>
-        </div>
-      </section>
-    </main>
+      <div class="field">
+        <label for="email">Электронная почта</label>
+        <input id="email" type="email"
+          placeholder="you@example.com"
+          autocomplete="email" required>
+      </div>
+
+      <div class="field">
+        <label for="password">Пароль</label>
+        <input id="password" type="password"
+          placeholder="Минимум 8 символов"
+          minlength="8" autocomplete="new-password" required>
+      </div>
+
+      <div class="field" id="confirmField">
+        <label for="confirmPassword">Повтори пароль</label>
+        <input id="confirmPassword" type="password"
+          placeholder="Введи пароль ещё раз"
+          autocomplete="new-password">
+      </div>
+
+      <button class="primary" id="submitButton" type="submit">
+        Создать аккаунт →
+      </button>
+
+      <div class="notice" id="notice" role="status"></div>
+    </form>
+
+  </section>
+
+  <div class="footer">
+    YouChat · Общение без границ<br>
+    Создано для твоих друзей и сообществ
   </div>
-  <div class="footer">Скачать моды в тгк: <b>@noomimodclone</b></div>
-</div>
+
+</main>
 
 <script>
-const $=id=>document.getElementById(id);
-let currentCount=10;
-let originalCount=10;
-let selectedSkin='Классический';
-let room=null;
-let theme=0;
+const $ = id => document.getElementById(id);
+let mode = "register";
 
-const skins=[
- ['Классический','🔹 Обычный стиль'],
- ['Неоновый','💠 Неон'],
- ['Ледяной','❄️ Лёд'],
- ['Космический','🌌 Космос'],
- ['Золотой','👑 Золото'],
- ['Электро','⚡ Электро']
-];
+function setMode(nextMode) {
+  mode = nextMode;
 
-function go(page){
- document.querySelectorAll('.navbtn[data-page]').forEach(b=>{
-  b.classList.toggle('active',b.dataset.page===page);
- });
- document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
- $('page-'+page).classList.add('show');
+  $("registerTab").classList.toggle("active", mode === "register");
+  $("loginTab").classList.toggle("active", mode === "login");
+
+  $("heading").textContent = mode === "register"
+    ? "Создать аккаунт" : "С возвращением!";
+
+  $("subtitle").textContent = mode === "register"
+    ? "Заполни данные и присоединяйся к YouChat."
+    : "Войди, чтобы продолжить общение.";
+
+  $("nameField").classList.toggle("hidden", mode === "login");
+  $("usernameField").classList.toggle("hidden", mode === "login");
+  $("confirmField").classList.toggle("hidden", mode === "login");
+
+  $("displayName").required = mode === "register";
+  $("username").required = mode === "register";
+  $("confirmPassword").required = mode === "register";
+
+  $("password").autocomplete = mode === "login"
+    ? "current-password" : "new-password";
+
+  $("submitButton").textContent = mode === "register"
+    ? "Создать аккаунт →" : "Войти →";
+
+  $("notice").style.display = "none";
 }
 
-document.querySelectorAll('.navbtn[data-page]').forEach(b=>{
- b.addEventListener('click',()=>go(b.dataset.page));
+$("username").addEventListener("input", () => {
+  const value = $("username").value.replace(/^@/, "");
+  const hint = $("usernameHint");
+  const valid = /^[a-zA-Z0-9_]{3,20}$/.test(value);
+
+  if (!value) {
+    hint.textContent = "Твой уникальный никнейм: @username";
+    hint.className = "hint";
+  } else if (valid) {
+    hint.textContent = "✓ Формат подходит: @" + value;
+    hint.className = "hint good";
+  } else {
+    hint.textContent =
+      "3–20 символов: латинские буквы, цифры и _";
+    hint.className = "hint bad";
+  }
 });
 
-function toggleMenu(){
- $('menu').classList.toggle('closed');
- $('launcher').classList.toggle('hide',!$('menu').classList.contains('closed'));
-}
+$("authForm").addEventListener("submit", event => {
+  event.preventDefault();
 
-function renderSkins(){
- $('skinGrid').innerHTML='';
- skins.forEach(([name,desc])=>{
-  const b=document.createElement('button');
-  b.className='skin'+(name===selectedSkin?' active':'');
-  const title=document.createElement('b');
-  title.textContent=name;
-  const small=document.createElement('small');
-  small.textContent=desc;
-  b.append(title,small);
-  b.onclick=()=>{
-   selectedSkin=name;
-   renderSkins();
-   update();
-   $('skinStatus').textContent='Выбран скин: '+name+'. Изменение действует только в демо.';
-   $('skinStatus').classList.remove('hide');
-  };
-  $('skinGrid').appendChild(b);
- });
-}
+  const notice = $("notice");
+  notice.style.display = "block";
 
-function update(){
- $('heroSkin').textContent=selectedSkin;
- $('heroCount').textContent=currentCount;
- $('countView').textContent=currentCount;
- $('originalView').textContent=originalCount;
-}
+  if (mode === "register") {
+    const username = $("username").value.replace(/^@/, "");
 
-function applyCount(){
- const n=Number($('countInput').value);
- if(!Number.isInteger(n)||n<0||n>999999){
-  $('countStatus').textContent='Введи целое число от 0 до 999999.';
-  return;
- }
- currentCount=n;
- update();
- $('countStatus').textContent='✓ В демо установлено '+n+'. Исходное значение: '+originalCount+'.';
-}
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+      notice.textContent = "Проверь формат Username.";
+      return;
+    }
 
-function restoreCount(){
- currentCount=originalCount;
- $('countInput').value=currentCount;
- update();
- $('countStatus').textContent='✓ Исходное количество восстановлено: '+currentCount+'.';
-}
+    if ($("password").value !== $("confirmPassword").value) {
+      notice.textContent = "Пароли не совпадают.";
+      return;
+    }
 
-function saveOriginal(){
- originalCount=currentCount;
- update();
- $('countStatus').textContent='✓ Исходное значение сохранено: '+originalCount+'.';
-}
-
-function createRoom(){
- const name=$('roomName').value.trim();
- if(!name){
-  $('roomStatus').textContent='Сначала введи название комнаты.';
-  $('roomResult').classList.remove('hide');
-  return;
- }
- room={
-  name,
-  pass:$('roomPass').value,
-  code:'NOO-'+Math.floor(1000+Math.random()*9000)
- };
- $('madeName').textContent=room.name;
- $('roomCode').textContent=room.code;
- $('players').textContent='1 / 2';
- $('joinBtn').classList.remove('hide');
- $('startBtn').classList.add('hide');
- $('roomResult').classList.remove('hide');
- $('roomStatus').textContent=room.pass?'Для комнаты задан пароль.':'Комната без пароля.';
-}
-
-async function copyCode(){
- if(!room)return;
- try{
-  await navigator.clipboard.writeText(room.code);
-  $('roomStatus').textContent='✓ Код скопирован: '+room.code;
- }catch(e){
-  $('roomStatus').textContent='Код: '+room.code+'. Скопируй его вручную.';
- }
-}
-
-function invite(){
- if(room)$('roomStatus').textContent='Передай другу код '+room.code+'. Реальное сетевое подключение не настроено.';
-}
-
-function addPlayer(){
- $('players').textContent='2 / 2';
- $('joinBtn').classList.add('hide');
- $('startBtn').classList.remove('hide');
-}
-
-function startGame(){
- alert('Демонстрация: кнопка работает, но запуск настоящей игры пока не подключён.');
-}
-
-function changeTheme(){
- theme=(theme+1)%3;
- const colors=[
-  ['#080d18','#101a2b','#4388ff','#58e5ed'],
-  ['#130b1d','#21132e','#a04dff','#ed8aff'],
-  ['#071613','#102720','#13a889','#7bf5bd']
- ];
- const c=colors[theme];
- document.documentElement.style.setProperty('--bg',c[0]);
- document.documentElement.style.setProperty('--panel',c[1]);
- document.documentElement.style.setProperty('--blue',c[2]);
- document.documentElement.style.setProperty('--cyan',c[3]);
- $('menu').style.background=c[0];
-}
-
-function resetDemo(){
- currentCount=10;
- originalCount=10;
- selectedSkin='Классический';
- $('countInput').value=10;
- $('countStatus').textContent='Демо сброшено.';
- $('skinStatus').classList.add('hide');
- update();
- renderSkins();
-}
-
-renderSkins();
-update();
+    notice.textContent =
+      "Интерфейс готов! Для настоящей регистрации " +
+      "нужно подключить сервер авторизации.";
+  } else {
+    notice.textContent =
+      "Для входа нужно подключить сервер авторизации.";
+  }
+});
 </script>
 </body>
 </html>
