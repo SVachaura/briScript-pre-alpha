@@ -3,221 +3,378 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>NoomiModClone</title>
 <style>
+:root {
+  --bg:#080d18; --panel:#101a2b; --panel2:#17243a;
+  --line:#2b3e5d; --blue:#4388ff; --cyan:#58e5ed;
+  --text:#f2f6ff; --muted:#91a4c2;
+}
 *{box-sizing:border-box}
-body{margin:0;padding:16px 12px 90px;background:#080e1b;color:#f4f7ff;font:15px Arial,sans-serif}
-.app{max-width:540px;margin:auto}
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.logo{font-size:22px;font-weight:900}
-.logo span{color:#55e5ee}
-.badge{color:#55e5ee;background:#14263e;border:1px solid #2c5279;border-radius:20px;padding:8px;font-size:11px}
-.panel{background:#111d30;border:1px solid #293c5b;border-radius:17px;padding:16px;margin:12px 0}
-h1{font-size:23px;margin:0 0 7px}
-h2{font-size:17px;margin:0 0 13px}
-.muted{color:#9aacc8;font-size:13px;line-height:1.5}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:13px 0}
-.big{font-size:28px;font-weight:bold;color:#55e5ee}
-.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:14px 0}
-button{background:#192943;border:1px solid #304665;color:white;border-radius:11px;padding:12px 10px;font-weight:bold;cursor:pointer}
+body {
+  margin:0;background:transparent;color:var(--text);
+  font:14px Arial,sans-serif;overflow:hidden;
+}
+button,input{font:inherit}
+button {
+  color:var(--text);background:var(--panel2);
+  border:1px solid var(--line);border-radius:9px;
+  padding:10px;cursor:pointer;font-weight:bold;
+}
 button:active{transform:scale(.98)}
-.primary,.active{background:#347bff;border-color:#5795ff}
-input{width:100%;padding:12px;border-radius:10px;background:#091322;border:1px solid #304665;color:white;font-size:16px;margin:7px 0 12px}
-label{display:block;color:#b8c7df;font-size:13px}
-.btns{display:flex;gap:8px;flex-wrap:wrap}
-.btns button{flex:1}
-.skin-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.skin{min-height:70px;text-align:left}
-.skin small{display:block;color:#b2c1d9;margin-top:7px}
+.primary,.active{background:var(--blue);border-color:#6ba2ff}
+#launcher {
+  position:fixed;bottom:12px;left:12px;z-index:10;
+  border-radius:24px;padding:12px 17px;
+  background:linear-gradient(135deg,#438dff,#6558f5);
+  box-shadow:0 5px 20px #0008;
+}
+#menu {
+  position:fixed;inset:3.5vh 3vw;
+  display:flex;flex-direction:column;
+  background:rgba(8,14,26,.97);
+  border:1px solid #344968;border-radius:15px;
+  overflow:hidden;box-shadow:0 10px 40px #0009;
+}
+#menu.closed{display:none}
+header {
+  height:48px;min-height:48px;padding:0 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line);
+}
+.logo{font-size:19px;font-weight:900}
+.logo span{color:var(--cyan)}
+.header-right{display:flex;align-items:center;gap:10px}
+.badge{font-size:10px;color:var(--cyan);border:1px solid #315779;padding:6px 9px;border-radius:20px}
+#close{font-size:20px;padding:4px 10px}
+.layout{display:flex;flex:1;min-height:0}
+nav{
+  width:155px;min-width:125px;padding:10px;
+  display:flex;flex-direction:column;gap:7px;
+  border-right:1px solid var(--line);background:#0b1423;
+}
+.navbtn{text-align:left;display:flex;gap:8px;align-items:center}
+.navbtn.active{background:#285bc0}
+.nav-bottom{margin-top:auto}
+main{flex:1;min-width:0;overflow:auto;padding:14px}
+.page{display:none}
+.page.show{display:block}
+h2{font-size:18px;margin:0 0 12px}
+h3{font-size:15px;margin:0 0 8px}
+.muted{font-size:12px;color:var(--muted);line-height:1.45}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px;min-width:0}
+.stat{font-size:26px;font-weight:900;color:var(--cyan);margin:8px 0}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0}
+input{width:100%;min-width:0;padding:10px;background:#080f1c;color:white;border:1px solid var(--line);border-radius:8px;margin:6px 0 10px}
+label{font-size:12px;color:#bac8df}
+.btnrow{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.btnrow button{flex:1}
+.skin-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.skin{text-align:left;min-height:58px}
+.skin small{display:block;color:var(--muted);margin-top:5px;font-size:11px}
+.notice{margin-top:10px;padding:9px;background:#10342e;border:1px solid #205c50;color:#9af3cc;border-radius:8px;font-size:12px}
+.code{font-size:24px;font-weight:900;letter-spacing:2px;text-align:center;color:var(--cyan);padding:10px;background:#080f1c;border:1px dashed #416c8a;border-radius:9px;margin:8px 0}
 .hide{display:none!important}
-.notice{margin-top:12px;padding:11px;border-radius:10px;background:#10332e;color:#91f5c8;font-size:13px}
-.code{font-size:27px;text-align:center;color:#55e5ee;letter-spacing:2px;font-weight:bold;padding:15px;border:1px dashed #426c88;border-radius:12px;margin:12px 0}
-.float{position:fixed;right:15px;bottom:16px;border:0;border-radius:30px;padding:15px 19px;background:linear-gradient(135deg,#438fff,#715cff);box-shadow:0 5px 22px #3677ff66}
-.tg{text-align:center;margin:22px 0 5px;font-weight:bold}
-.tg span{color:#55e5ee}
-footer{text-align:center;color:#7284a2;font-size:11px;margin-top:16px}
+.footer{padding:7px;text-align:center;font-size:11px;color:var(--muted)}
+.footer b{color:var(--cyan)}
+@media(max-height:360px){
+  header{height:38px;min-height:38px}
+  nav{width:130px;padding:6px;gap:4px}
+  nav button{padding:7px;font-size:11px}
+  main{padding:9px}
+  .card{padding:9px}
+  .stat{font-size:21px;margin:4px 0}
+  .footer{display:none}
+}
+@media(max-width:560px){
+  nav{width:112px;min-width:112px;padding:6px}
+  .navbtn{font-size:11px;padding:9px 5px;gap:4px}
+  main{padding:9px}
+  .cards{grid-template-columns:1fr}
+  .skin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .badge{display:none}
+}
 </style>
 </head>
 <body>
-<div class="app" id="app">
-<header>
-<div class="logo">Noomi<span>Mod</span>Clone</div>
-<div class="badge">MOD MENU</div>
-</header>
 
-<div class="panel">
-<h1>Игровая панель</h1>
-<div class="muted">Настройки NoomiModClone</div>
-<div class="row">
-<div><div class="muted">Выбранный скин</div><b id="heroSkin">Классический</b></div>
-<div style="text-align:right"><div class="muted">Перехваты</div><div class="big" id="heroCount">10</div></div>
+<button id="launcher" onclick="toggleMenu()">MOD MENU</button>
+
+<div id="menu">
+  <header>
+    <div class="logo">Noomi<span>Mod</span>Clone</div>
+    <div class="header-right">
+      <div class="badge">LANDSCAPE UI</div>
+      <button id="close" onclick="toggleMenu()">×</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav>
+      <button class="navbtn active" data-page="home">⌂ Главная</button>
+      <button class="navbtn" data-page="skins">✦ Скины</button>
+      <button class="navbtn" data-page="count">🎯 Перехваты</button>
+      <button class="navbtn" data-page="multi">◎ Комната</button>
+      <button class="navbtn" data-page="settings">⚙ Настройки</button>
+      <button class="navbtn nav-bottom" onclick="toggleMenu()">↙ Свернуть</button>
+    </nav>
+
+    <main>
+      <section class="page show" id="page-home">
+        <h2>Игровая панель</h2>
+        <div class="cards">
+          <div class="card">
+            <div class="muted">Выбранный скин</div>
+            <div class="stat" id="heroSkin">Классический</div>
+            <button onclick="go('skins')">Выбрать скин →</button>
+          </div>
+          <div class="card">
+            <div class="muted">Количество перехватов</div>
+            <div class="stat" id="heroCount">10</div>
+            <button onclick="go('count')">Изменить количество →</button>
+          </div>
+          <div class="card">
+            <h3>Игра с другом</h3>
+            <div class="muted">Комнаты и приглашения</div>
+            <button onclick="go('multi')">Открыть комнаты →</button>
+          </div>
+          <div class="card">
+            <h3>Состояние меню</h3>
+            <div class="muted">Интерактивная демонстрация интерфейса</div>
+            <div class="notice">Меню открыто</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-skins">
+        <h2>✦ Скины</h2>
+        <div class="muted">Выбери скин для демонстрации.</div>
+        <div class="skin-grid" id="skinGrid" style="margin-top:12px"></div>
+        <div id="skinStatus" class="notice hide"></div>
+      </section>
+
+      <section class="page" id="page-count">
+        <h2>🎯 Перехваты</h2>
+        <div class="cards">
+          <div class="card">
+            <div class="muted">Текущее значение</div>
+            <div class="stat" id="countView">10</div>
+          </div>
+          <div class="card">
+            <div class="muted">Сохранённое исходное</div>
+            <div class="stat" id="originalView">10</div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:10px">
+          <label for="countInput">Установить количество</label>
+          <input id="countInput" type="number" min="0" max="999999" value="10">
+          <div class="btnrow">
+            <button class="primary" onclick="applyCount()">✓ Применить</button>
+            <button onclick="restoreCount()">↶ Вернуть исходное</button>
+            <button onclick="saveOriginal()">Сохранить текущее как исходное</button>
+          </div>
+          <div id="countStatus" class="muted" style="margin-top:10px"></div>
+        </div>
+      </section>
+
+      <section class="page" id="page-multi">
+        <h2>◎ Комната с другом</h2>
+        <div class="cards">
+          <div class="card">
+            <label for="roomName">Название комнаты</label>
+            <input id="roomName" maxlength="24" value="скебоб">
+            <label for="roomPass">Пароль (необязательно)</label>
+            <input id="roomPass" maxlength="32" placeholder="Пароль комнаты">
+            <button class="primary" style="width:100%" onclick="createRoom()">＋ Создать комнату</button>
+          </div>
+          <div class="card hide" id="roomResult">
+            <div class="muted">Название комнаты</div>
+            <h3 id="madeName">скебоб</h3>
+            <div class="muted">Код комнаты</div>
+            <div class="code" id="roomCode">NOO-0000</div>
+            <div class="btnrow">
+              <button onclick="copyCode()">Копировать код</button>
+              <button onclick="invite()">Пригласить</button>
+            </div>
+            <div id="roomStatus" class="muted" style="margin-top:9px"></div>
+            <div class="row"><span>Игроки</span><b id="players">1 / 2</b></div>
+            <button id="joinBtn" style="width:100%" onclick="addPlayer()">Добавить игрока (демо)</button>
+            <button id="startBtn" class="primary hide" style="width:100%;margin-top:8px" onclick="startGame()">▶ Начать (демо)</button>
+          </div>
+        </div>
+        <div class="notice">Комнаты пока демонстрационные и не соединяют реальные устройства.</div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <h2>⚙ Настройки</h2>
+        <div class="card">
+          <div class="row"><div><b>Цвет меню</b><div class="muted">Синяя тема</div></div><button onclick="changeTheme()">Сменить тему</button></div>
+          <div class="row"><div><b>Сбросить демо</b><div class="muted">Вернуть значения по умолчанию</div></div><button onclick="resetDemo()">Сбросить</button></div>
+          <div class="muted">Версия интерфейса: 0.2 Demo</div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="footer">Скачать моды в тгк: <b>@noomimodclone</b></div>
 </div>
-</div>
-
-<div class="tabs">
-<button class="tab active" data-page="home">Главная</button>
-<button class="tab" data-page="skins">Скины</button>
-<button class="tab" data-page="count">Перехваты</button>
-<button class="tab" data-page="multi">Мультиплеер</button>
-</div>
-
-<section class="panel" id="page-home">
-<h2>⚡ Быстрые настройки</h2>
-<div class="row"><div><b>Все скины</b><div class="muted">Выбрать оформление</div></div><button onclick="go('skins')">Открыть</button></div>
-<div class="row"><div><b>Перехваты</b><div class="muted">Текущее: <span id="homeCount">10</span></div></div><button onclick="go('count')">Настроить</button></div>
-<div class="row"><div><b>Комната с другом</b><div class="muted">Создать комнату</div></div><button onclick="go('multi')">Открыть</button></div>
-<div class="notice">Демонстрация интерфейса. Игра пока не подключена.</div>
-</section>
-
-<section class="panel hide" id="page-skins">
-<h2>🎨 Скины</h2>
-<div class="muted">Выбери скин в меню.</div>
-<div class="skin-grid" id="skinGrid" style="margin-top:12px"></div>
-<div id="skinStatus" class="muted"></div>
-</section>
-
-<section class="panel hide" id="page-count">
-<h2>🎯 Количество перехватов</h2>
-<div class="row"><div><div class="muted">Текущее</div><div class="big" id="countView">10</div></div><div style="text-align:right"><div class="muted">Исходное</div><b id="originalView">10</b></div></div>
-<label for="countInput">Новое количество</label>
-<input id="countInput" type="number" min="0" max="999999" value="10">
-<div class="btns">
-<button class="primary" onclick="applyCount()">Применить</button>
-<button onclick="restoreCount()">Вернуть исходное</button>
-</div>
-<div class="muted" id="countStatus" style="margin-top:12px"></div>
-</section>
-
-<section class="panel hide" id="page-multi">
-<h2>🌐 Комната с другом</h2>
-<label for="roomName">Название комнаты</label>
-<input id="roomName" maxlength="24" value="Моя комната">
-<label for="roomPass">Пароль (необязательно)</label>
-<input id="roomPass" maxlength="32" placeholder="Оставь пустым без пароля">
-<button class="primary" style="width:100%" onclick="createRoom()">＋ Создать комнату</button>
-<div id="roomResult" class="hide">
-<hr style="border-color:#293c5b;margin:18px 0">
-<div class="muted">Название комнаты</div><h3 id="madeName"></h3>
-<div class="muted">Код комнаты</div><div class="code" id="roomCode"></div>
-<div class="btns"><button onclick="copyCode()">Копировать код</button><button onclick="invite()">Пригласить друга</button></div>
-<div id="roomStatus" class="muted" style="margin-top:12px"></div>
-<div class="row"><span>Игроки</span><b id="players">1 / 2</b></div>
-<button id="joinBtn" style="width:100%" onclick="addPlayer()">＋ Добавить второго игрока (демо)</button>
-<div id="startBox" class="hide"><div class="notice">В демоверсии показаны два игрока.</div><button class="primary" style="width:100%;margin-top:10px" onclick="startGame()">▶ Начать игру</button></div>
-</div>
-</section>
-
-<div class="tg">Скачать моды в тгк: <span>@noomimodclone</span></div>
-<footer>NOOMIMODCLONE · DEMO</footer>
-</div>
-
-<button class="float" id="floatBtn" onclick="toggleMenu()">MOD MENU</button>
 
 <script>
 const $=id=>document.getElementById(id);
-let currentCount=10,originalCount=10,selectedSkin='Классический',room=null;
+let currentCount=10;
+let originalCount=10;
+let selectedSkin='Классический';
+let room=null;
+let theme=0;
 
 const skins=[
-['Классический','🔹 Обычный'],
-['Неоновый','💠 Неон'],
-['Ледяной','❄️ Лёд'],
-['Космический','🌌 Космос'],
-['Золотой','👑 Золото'],
-['Электро','⚡ Электро']
+ ['Классический','🔹 Обычный стиль'],
+ ['Неоновый','💠 Неон'],
+ ['Ледяной','❄️ Лёд'],
+ ['Космический','🌌 Космос'],
+ ['Золотой','👑 Золото'],
+ ['Электро','⚡ Электро']
 ];
 
 function go(page){
-document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
-document.querySelectorAll('section[id^="page-"]').forEach(s=>s.classList.add('hide'));
-$('page-'+page).classList.remove('hide');
+ document.querySelectorAll('.navbtn[data-page]').forEach(b=>{
+  b.classList.toggle('active',b.dataset.page===page);
+ });
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+ $('page-'+page).classList.add('show');
 }
 
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>go(b.dataset.page));
+document.querySelectorAll('.navbtn[data-page]').forEach(b=>{
+ b.addEventListener('click',()=>go(b.dataset.page));
+});
+
+function toggleMenu(){
+ $('menu').classList.toggle('closed');
+ $('launcher').classList.toggle('hide',!$('menu').classList.contains('closed'));
+}
 
 function renderSkins(){
-$('skinGrid').innerHTML='';
-skins.forEach(([name,desc])=>{
-const b=document.createElement('button');
-b.className='skin'+(name===selectedSkin?' active':'');
-b.innerHTML='<b>'+name+'</b><small>'+desc+'</small>';
-b.onclick=()=>{
-selectedSkin=name;
-renderSkins();
-update();
-$('skinStatus').textContent='Выбран скин: '+name;
-};
-$('skinGrid').appendChild(b);
-});
+ $('skinGrid').innerHTML='';
+ skins.forEach(([name,desc])=>{
+  const b=document.createElement('button');
+  b.className='skin'+(name===selectedSkin?' active':'');
+  const title=document.createElement('b');
+  title.textContent=name;
+  const small=document.createElement('small');
+  small.textContent=desc;
+  b.append(title,small);
+  b.onclick=()=>{
+   selectedSkin=name;
+   renderSkins();
+   update();
+   $('skinStatus').textContent='Выбран скин: '+name+'. Изменение действует только в демо.';
+   $('skinStatus').classList.remove('hide');
+  };
+  $('skinGrid').appendChild(b);
+ });
 }
 
 function update(){
-$('heroSkin').textContent=selectedSkin;
-$('heroCount').textContent=currentCount;
-$('homeCount').textContent=currentCount;
-$('countView').textContent=currentCount;
-$('originalView').textContent=originalCount;
+ $('heroSkin').textContent=selectedSkin;
+ $('heroCount').textContent=currentCount;
+ $('countView').textContent=currentCount;
+ $('originalView').textContent=originalCount;
 }
 
 function applyCount(){
-const n=Number($('countInput').value);
-if(!Number.isInteger(n)||n<0||n>999999){
-$('countStatus').textContent='Введи целое число от 0 до 999999.';
-return;
-}
-currentCount=n;
-update();
-$('countStatus').textContent='✓ В демоверсии установлено: '+n;
+ const n=Number($('countInput').value);
+ if(!Number.isInteger(n)||n<0||n>999999){
+  $('countStatus').textContent='Введи целое число от 0 до 999999.';
+  return;
+ }
+ currentCount=n;
+ update();
+ $('countStatus').textContent='✓ В демо установлено '+n+'. Исходное значение: '+originalCount+'.';
 }
 
 function restoreCount(){
-currentCount=originalCount;
-$('countInput').value=currentCount;
-update();
-$('countStatus').textContent='✓ Исходное количество восстановлено: '+currentCount;
+ currentCount=originalCount;
+ $('countInput').value=currentCount;
+ update();
+ $('countStatus').textContent='✓ Исходное количество восстановлено: '+currentCount+'.';
+}
+
+function saveOriginal(){
+ originalCount=currentCount;
+ update();
+ $('countStatus').textContent='✓ Исходное значение сохранено: '+originalCount+'.';
 }
 
 function createRoom(){
-const name=$('roomName').value.trim();
-if(!name){$('roomStatus').textContent='Введи название комнаты.';return;}
-room={name,pass:$('roomPass').value,code:'NOO-'+Math.floor(1000+Math.random()*9000)};
-$('madeName').textContent=room.name;
-$('roomCode').textContent=room.code;
-$('players').textContent='1 / 2';
-$('joinBtn').classList.remove('hide');
-$('startBox').classList.add('hide');
-$('roomResult').classList.remove('hide');
-$('roomStatus').textContent=room.pass?'Для комнаты задан пароль.':'Комната без пароля.';
+ const name=$('roomName').value.trim();
+ if(!name){
+  $('roomStatus').textContent='Сначала введи название комнаты.';
+  $('roomResult').classList.remove('hide');
+  return;
+ }
+ room={
+  name,
+  pass:$('roomPass').value,
+  code:'NOO-'+Math.floor(1000+Math.random()*9000)
+ };
+ $('madeName').textContent=room.name;
+ $('roomCode').textContent=room.code;
+ $('players').textContent='1 / 2';
+ $('joinBtn').classList.remove('hide');
+ $('startBtn').classList.add('hide');
+ $('roomResult').classList.remove('hide');
+ $('roomStatus').textContent=room.pass?'Для комнаты задан пароль.':'Комната без пароля.';
 }
 
 async function copyCode(){
-if(!room)return;
-try{
-await navigator.clipboard.writeText(room.code);
-$('roomStatus').textContent='✓ Код скопирован: '+room.code;
-}catch(e){
-$('roomStatus').textContent='Код: '+room.code+' (скопируй вручную).';
-}
+ if(!room)return;
+ try{
+  await navigator.clipboard.writeText(room.code);
+  $('roomStatus').textContent='✓ Код скопирован: '+room.code;
+ }catch(e){
+  $('roomStatus').textContent='Код: '+room.code+'. Скопируй его вручную.';
+ }
 }
 
 function invite(){
-if(room)$('roomStatus').textContent='Отправь другу код '+room.code+'. Реальное подключение пока не настроено.';
+ if(room)$('roomStatus').textContent='Передай другу код '+room.code+'. Реальное сетевое подключение не настроено.';
 }
 
 function addPlayer(){
-$('players').textContent='2 / 2';
-$('joinBtn').classList.add('hide');
-$('startBox').classList.remove('hide');
+ $('players').textContent='2 / 2';
+ $('joinBtn').classList.add('hide');
+ $('startBtn').classList.remove('hide');
 }
 
 function startGame(){
-alert('Это демонстрация меню. Запуск настоящей игры и соединение игроков ещё не подключены.');
+ alert('Демонстрация: кнопка работает, но запуск настоящей игры пока не подключён.');
 }
 
-function toggleMenu(){
-const app=$('app');
-const hidden=app.classList.toggle('hide');
-$('floatBtn').textContent=hidden?'ОТКРЫТЬ MENU':'СКРЫТЬ MENU';
+function changeTheme(){
+ theme=(theme+1)%3;
+ const colors=[
+  ['#080d18','#101a2b','#4388ff','#58e5ed'],
+  ['#130b1d','#21132e','#a04dff','#ed8aff'],
+  ['#071613','#102720','#13a889','#7bf5bd']
+ ];
+ const c=colors[theme];
+ document.documentElement.style.setProperty('--bg',c[0]);
+ document.documentElement.style.setProperty('--panel',c[1]);
+ document.documentElement.style.setProperty('--blue',c[2]);
+ document.documentElement.style.setProperty('--cyan',c[3]);
+ $('menu').style.background=c[0];
+}
+
+function resetDemo(){
+ currentCount=10;
+ originalCount=10;
+ selectedSkin='Классический';
+ $('countInput').value=10;
+ $('countStatus').textContent='Демо сброшено.';
+ $('skinStatus').classList.add('hide');
+ update();
+ renderSkins();
 }
 
 renderSkins();
