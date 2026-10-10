@@ -1,346 +1,227 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Svetofor VPN</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NoomiModClone</title>
 <style>
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    min-height: 100vh;
-    background: #f4f4f4;
-    font-family: Arial, sans-serif;
-    color: #111;
-    padding: 30px 16px;
-}
-
-.container {
-    max-width: 430px;
-    margin: auto;
-}
-
-h1 {
-    font-size: 30px;
-    margin: 0 0 25px;
-    font-weight: 900;
-}
-
-/* СВЕТОФОР */
-
-.traffic-wrap {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 25px;
-}
-
-.traffic {
-    width: 130px;
-    padding: 12px;
-    border-radius: 28px;
-    background: linear-gradient(145deg, #333, #090909);
-    border: 3px solid #444;
-    box-shadow:
-        0 15px 35px rgba(0,0,0,.3),
-        inset 0 2px 5px rgba(255,255,255,.15);
-}
-
-.light {
-    width: 82px;
-    height: 82px;
-    margin: 10px auto;
-    border-radius: 50%;
-    background: #141414;
-    border: 3px solid #050505;
-    opacity: .25;
-    transition: .4s;
-}
-
-/* RED */
-
-.red.active {
-    opacity: 1;
-    background: radial-gradient(
-        circle at 35% 25%,
-        #ffbaba,
-        #ff2222 40%,
-        #800000 75%
-    );
-
-    box-shadow:
-        0 0 35px #ff2222,
-        inset 0 4px 8px white;
-}
-
-/* YELLOW */
-
-.yellow.active {
-    opacity: 1;
-    background: radial-gradient(
-        circle at 35% 25%,
-        #fff4ad,
-        #ffd21c 40%,
-        #8b6800 75%
-    );
-
-    box-shadow:
-        0 0 35px #ffd21c,
-        inset 0 4px 8px white;
-}
-
-/* GREEN */
-
-.green.active {
-    opacity: 1;
-    background: radial-gradient(
-        circle at 35% 25%,
-        #baffcf,
-        #20e66b 40%,
-        #087b35 75%
-    );
-
-    box-shadow:
-        0 0 40px #20e66b,
-        inset 0 4px 8px white;
-}
-
-/* STATUS */
-
-.status-title {
-    font-size: 25px;
-    font-weight: 900;
-    margin-bottom: 7px;
-}
-
-.status-short {
-    color: #555;
-    font-size: 16px;
-    line-height: 1.45;
-}
-
-/* DESCRIPTION */
-
-.description {
-    margin-top: 20px;
-    padding: 22px;
-    background: white;
-    border: 2px solid #111;
-    border-radius: 18px;
-    box-shadow: 0 8px 0 #111;
-}
-
-.description-title {
-    font-size: 19px;
-    font-weight: 900;
-    margin-bottom: 10px;
-}
-
-.description-text {
-    color: #333;
-    line-height: 1.55;
-}
-
-/* IP */
-
-.ip {
-    margin-top: 20px;
-    color: #777;
-    font-size: 13px;
-    text-align: center;
-}
+*{box-sizing:border-box}
+body{margin:0;padding:16px 12px 90px;background:#080e1b;color:#f4f7ff;font:15px Arial,sans-serif}
+.app{max-width:540px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.logo{font-size:22px;font-weight:900}
+.logo span{color:#55e5ee}
+.badge{color:#55e5ee;background:#14263e;border:1px solid #2c5279;border-radius:20px;padding:8px;font-size:11px}
+.panel{background:#111d30;border:1px solid #293c5b;border-radius:17px;padding:16px;margin:12px 0}
+h1{font-size:23px;margin:0 0 7px}
+h2{font-size:17px;margin:0 0 13px}
+.muted{color:#9aacc8;font-size:13px;line-height:1.5}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:13px 0}
+.big{font-size:28px;font-weight:bold;color:#55e5ee}
+.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:14px 0}
+button{background:#192943;border:1px solid #304665;color:white;border-radius:11px;padding:12px 10px;font-weight:bold;cursor:pointer}
+button:active{transform:scale(.98)}
+.primary,.active{background:#347bff;border-color:#5795ff}
+input{width:100%;padding:12px;border-radius:10px;background:#091322;border:1px solid #304665;color:white;font-size:16px;margin:7px 0 12px}
+label{display:block;color:#b8c7df;font-size:13px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btns button{flex:1}
+.skin-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.skin{min-height:70px;text-align:left}
+.skin small{display:block;color:#b2c1d9;margin-top:7px}
+.hide{display:none!important}
+.notice{margin-top:12px;padding:11px;border-radius:10px;background:#10332e;color:#91f5c8;font-size:13px}
+.code{font-size:27px;text-align:center;color:#55e5ee;letter-spacing:2px;font-weight:bold;padding:15px;border:1px dashed #426c88;border-radius:12px;margin:12px 0}
+.float{position:fixed;right:15px;bottom:16px;border:0;border-radius:30px;padding:15px 19px;background:linear-gradient(135deg,#438fff,#715cff);box-shadow:0 5px 22px #3677ff66}
+.tg{text-align:center;margin:22px 0 5px;font-weight:bold}
+.tg span{color:#55e5ee}
+footer{text-align:center;color:#7284a2;font-size:11px;margin-top:16px}
 </style>
 </head>
-
 <body>
+<div class="app" id="app">
+<header>
+<div class="logo">Noomi<span>Mod</span>Clone</div>
+<div class="badge">MOD MENU</div>
+</header>
 
-<div class="container">
-
-    <h1>🚦 Svetofor</h1>
-
-    <div class="traffic-wrap">
-
-        <div class="traffic">
-
-            <div id="red" class="light red"></div>
-
-            <div id="yellow" class="light yellow active"></div>
-
-            <div id="green" class="light green"></div>
-
-        </div>
-
-    </div>
-
-    <div class="status-title" id="statusTitle">
-        🟡 Проверка соединения
-    </div>
-
-    <div class="status-short" id="statusShort">
-        Svetofor автоматически проверяет ваше интернет-соединение.
-    </div>
-
-    <div class="description">
-
-        <div class="description-title">
-            Что сейчас происходит
-        </div>
-
-        <div class="description-text" id="descriptionText">
-            Подождите немного. Мы определяем ваш публичный IP-адрес
-            и проверяем признаки VPN или прокси-соединения.
-        </div>
-
-    </div>
-
-    <div class="ip" id="ip">
-        Проверка IP...
-    </div>
-
+<div class="panel">
+<h1>Игровая панель</h1>
+<div class="muted">Настройки NoomiModClone</div>
+<div class="row">
+<div><div class="muted">Выбранный скин</div><b id="heroSkin">Классический</b></div>
+<div style="text-align:right"><div class="muted">Перехваты</div><div class="big" id="heroCount">10</div></div>
+</div>
 </div>
 
+<div class="tabs">
+<button class="tab active" data-page="home">Главная</button>
+<button class="tab" data-page="skins">Скины</button>
+<button class="tab" data-page="count">Перехваты</button>
+<button class="tab" data-page="multi">Мультиплеер</button>
+</div>
+
+<section class="panel" id="page-home">
+<h2>⚡ Быстрые настройки</h2>
+<div class="row"><div><b>Все скины</b><div class="muted">Выбрать оформление</div></div><button onclick="go('skins')">Открыть</button></div>
+<div class="row"><div><b>Перехваты</b><div class="muted">Текущее: <span id="homeCount">10</span></div></div><button onclick="go('count')">Настроить</button></div>
+<div class="row"><div><b>Комната с другом</b><div class="muted">Создать комнату</div></div><button onclick="go('multi')">Открыть</button></div>
+<div class="notice">Демонстрация интерфейса. Игра пока не подключена.</div>
+</section>
+
+<section class="panel hide" id="page-skins">
+<h2>🎨 Скины</h2>
+<div class="muted">Выбери скин в меню.</div>
+<div class="skin-grid" id="skinGrid" style="margin-top:12px"></div>
+<div id="skinStatus" class="muted"></div>
+</section>
+
+<section class="panel hide" id="page-count">
+<h2>🎯 Количество перехватов</h2>
+<div class="row"><div><div class="muted">Текущее</div><div class="big" id="countView">10</div></div><div style="text-align:right"><div class="muted">Исходное</div><b id="originalView">10</b></div></div>
+<label for="countInput">Новое количество</label>
+<input id="countInput" type="number" min="0" max="999999" value="10">
+<div class="btns">
+<button class="primary" onclick="applyCount()">Применить</button>
+<button onclick="restoreCount()">Вернуть исходное</button>
+</div>
+<div class="muted" id="countStatus" style="margin-top:12px"></div>
+</section>
+
+<section class="panel hide" id="page-multi">
+<h2>🌐 Комната с другом</h2>
+<label for="roomName">Название комнаты</label>
+<input id="roomName" maxlength="24" value="Моя комната">
+<label for="roomPass">Пароль (необязательно)</label>
+<input id="roomPass" maxlength="32" placeholder="Оставь пустым без пароля">
+<button class="primary" style="width:100%" onclick="createRoom()">＋ Создать комнату</button>
+<div id="roomResult" class="hide">
+<hr style="border-color:#293c5b;margin:18px 0">
+<div class="muted">Название комнаты</div><h3 id="madeName"></h3>
+<div class="muted">Код комнаты</div><div class="code" id="roomCode"></div>
+<div class="btns"><button onclick="copyCode()">Копировать код</button><button onclick="invite()">Пригласить друга</button></div>
+<div id="roomStatus" class="muted" style="margin-top:12px"></div>
+<div class="row"><span>Игроки</span><b id="players">1 / 2</b></div>
+<button id="joinBtn" style="width:100%" onclick="addPlayer()">＋ Добавить второго игрока (демо)</button>
+<div id="startBox" class="hide"><div class="notice">В демоверсии показаны два игрока.</div><button class="primary" style="width:100%;margin-top:10px" onclick="startGame()">▶ Начать игру</button></div>
+</div>
+</section>
+
+<div class="tg">Скачать моды в тгк: <span>@noomimodclone</span></div>
+<footer>NOOMIMODCLONE · DEMO</footer>
+</div>
+
+<button class="float" id="floatBtn" onclick="toggleMenu()">MOD MENU</button>
 
 <script>
+const $=id=>document.getElementById(id);
+let currentCount=10,originalCount=10,selectedSkin='Классический',room=null;
 
-const red = document.getElementById("red");
-const yellow = document.getElementById("yellow");
-const green = document.getElementById("green");
+const skins=[
+['Классический','🔹 Обычный'],
+['Неоновый','💠 Неон'],
+['Ледяной','❄️ Лёд'],
+['Космический','🌌 Космос'],
+['Золотой','👑 Золото'],
+['Электро','⚡ Электро']
+];
 
-const title = document.getElementById("statusTitle");
-const short = document.getElementById("statusShort");
-const description = document.getElementById("descriptionText");
-const ipText = document.getElementById("ip");
-
-
-function setLight(color) {
-
-    red.classList.remove("active");
-    yellow.classList.remove("active");
-    green.classList.remove("active");
-
-    if (color === "red") {
-        red.classList.add("active");
-    }
-
-    if (color === "yellow") {
-        yellow.classList.add("active");
-    }
-
-    if (color === "green") {
-        green.classList.add("active");
-    }
+function go(page){
+document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+document.querySelectorAll('section[id^="page-"]').forEach(s=>s.classList.add('hide'));
+$('page-'+page).classList.remove('hide');
 }
 
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>go(b.dataset.page));
 
-async function checkVPN() {
-
-    // Жёлтый во время проверки
-    setLight("yellow");
-
-    title.textContent = "🟡 Проверка соединения";
-
-    short.textContent =
-        "Svetofor автоматически проверяет ваше интернет-соединение.";
-
-    description.textContent =
-        "Подождите немного. Мы определяем ваш публичный IP-адрес " +
-        "и проверяем признаки VPN или прокси-соединения.";
-
-    try {
-
-        const response = await fetch(
-            "https://ipapi.co/json/",
-            {
-                cache: "no-store"
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error("IP API error");
-        }
-
-        const data = await response.json();
-
-        ipText.textContent =
-            "IP: " + (data.ip || "не определён");
-
-
-        /*
-         * ipapi.co может передавать признаки VPN/прокси
-         * в некоторых ответах через threat.
-         */
-
-        const threat = data.threat || {};
-
-        const isVPN =
-            threat.is_vpn === true ||
-            threat.is_proxy === true ||
-            threat.is_tor === true ||
-            threat.is_threat === true;
-
-
-        if (isVPN) {
-
-            // 🟢 VPN
-            setLight("green");
-
-            title.textContent =
-                "🟢 VPN включён";
-
-            short.textContent =
-                "VPN-соединение обнаружено.";
-
-            description.textContent =
-                "Svetofor обнаружил признаки VPN или прокси-соединения. " +
-                "Ваш текущий IP связан с VPN, прокси или другим " +
-                "промежуточным соединением.";
-
-        } else {
-
-            // 🔴 VPN нет
-            setLight("red");
-
-            title.textContent =
-                "🔴 VPN выключен";
-
-            short.textContent =
-                "VPN-соединение не обнаружено.";
-
-            description.textContent =
-                "Сейчас соединение выглядит как обычное интернет-соединение. " +
-                "Svetofor не обнаружил признаков VPN или прокси для вашего " +
-                "текущего публичного IP-адреса.";
-
-        }
-
-    } catch (error) {
-
-        // Если API не отвечает
-        setLight("yellow");
-
-        title.textContent =
-            "🟡 Не удалось проверить";
-
-        short.textContent =
-            "Не удалось определить состояние соединения.";
-
-        description.textContent =
-            "Сервис проверки IP временно недоступен или запрос был " +
-            "заблокирован. Попробуйте обновить страницу немного позже.";
-
-        ipText.textContent =
-            "IP: проверка недоступна";
-    }
+function renderSkins(){
+$('skinGrid').innerHTML='';
+skins.forEach(([name,desc])=>{
+const b=document.createElement('button');
+b.className='skin'+(name===selectedSkin?' active':'');
+b.innerHTML='<b>'+name+'</b><small>'+desc+'</small>';
+b.onclick=()=>{
+selectedSkin=name;
+renderSkins();
+update();
+$('skinStatus').textContent='Выбран скин: '+name;
+};
+$('skinGrid').appendChild(b);
+});
 }
 
+function update(){
+$('heroSkin').textContent=selectedSkin;
+$('heroCount').textContent=currentCount;
+$('homeCount').textContent=currentCount;
+$('countView').textContent=currentCount;
+$('originalView').textContent=originalCount;
+}
 
-// Запускаем автоматически
-checkVPN();
+function applyCount(){
+const n=Number($('countInput').value);
+if(!Number.isInteger(n)||n<0||n>999999){
+$('countStatus').textContent='Введи целое число от 0 до 999999.';
+return;
+}
+currentCount=n;
+update();
+$('countStatus').textContent='✓ В демоверсии установлено: '+n;
+}
 
+function restoreCount(){
+currentCount=originalCount;
+$('countInput').value=currentCount;
+update();
+$('countStatus').textContent='✓ Исходное количество восстановлено: '+currentCount;
+}
+
+function createRoom(){
+const name=$('roomName').value.trim();
+if(!name){$('roomStatus').textContent='Введи название комнаты.';return;}
+room={name,pass:$('roomPass').value,code:'NOO-'+Math.floor(1000+Math.random()*9000)};
+$('madeName').textContent=room.name;
+$('roomCode').textContent=room.code;
+$('players').textContent='1 / 2';
+$('joinBtn').classList.remove('hide');
+$('startBox').classList.add('hide');
+$('roomResult').classList.remove('hide');
+$('roomStatus').textContent=room.pass?'Для комнаты задан пароль.':'Комната без пароля.';
+}
+
+async function copyCode(){
+if(!room)return;
+try{
+await navigator.clipboard.writeText(room.code);
+$('roomStatus').textContent='✓ Код скопирован: '+room.code;
+}catch(e){
+$('roomStatus').textContent='Код: '+room.code+' (скопируй вручную).';
+}
+}
+
+function invite(){
+if(room)$('roomStatus').textContent='Отправь другу код '+room.code+'. Реальное подключение пока не настроено.';
+}
+
+function addPlayer(){
+$('players').textContent='2 / 2';
+$('joinBtn').classList.add('hide');
+$('startBox').classList.remove('hide');
+}
+
+function startGame(){
+alert('Это демонстрация меню. Запуск настоящей игры и соединение игроков ещё не подключены.');
+}
+
+function toggleMenu(){
+const app=$('app');
+const hidden=app.classList.toggle('hide');
+$('floatBtn').textContent=hidden?'ОТКРЫТЬ MENU':'СКРЫТЬ MENU';
+}
+
+renderSkins();
+update();
 </script>
-
 </body>
 </html>
